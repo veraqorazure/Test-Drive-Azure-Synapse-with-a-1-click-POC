@@ -473,7 +473,7 @@
 			},
 			"SQLLoginUsername": {
 				"type": "string",
-				"defaultValue": "veraqoradmin"
+				"defaultValue": "dmzveraqor"
 			},
 			"KeyVaultName": {
 				"type": "string",
