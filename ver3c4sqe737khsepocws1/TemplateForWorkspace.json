@@ -519,7 +519,7 @@
 					},
 					"SQLLoginUsername": {
 						"type": "string",
-						"defaultValue": "veraqoradmin"
+						"defaultValue": "dmzveraqor"
 					},
 					"KeyVaultName": {
 						"type": "string",
@@ -1149,16 +1149,20 @@
 			"properties": {
 				"parameters": {
 					"SynapseWorkspaceName": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "ver3c4sqe737khsepocws1"
 					},
 					"SQLDedicatedPoolName": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "ver3c4sqe737khsepocws1p1"
 					},
 					"keyVaultName": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "kvver3c4sqe737khsepoc"
 					},
 					"SQLLoginUsername": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "dmzveraqor"
 					}
 				},
 				"annotations": [],
@@ -1220,7 +1224,11 @@
 						"dataFlowProperties": {
 							"computeType": "General",
 							"coreCount": 8,
-							"timeToLive": 0
+							"timeToLive": 0,
+							"cleanup": true
+						},
+						"pipelineExternalComputeScaleProperties": {
+							"timeToLive": 60
 						}
 					}
 				},
