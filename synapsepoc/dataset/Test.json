@@ -10,7 +10,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "Country_dwh"
+			"table": "Country_stg"
 		}
 	}
 }
