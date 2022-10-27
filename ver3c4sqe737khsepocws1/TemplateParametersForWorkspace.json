@@ -5,6 +5,12 @@
 		"workspaceName": {
 			"value": "ver3c4sqe737khsepocws1"
 		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureSynapseAnalytics1_test_connectionString": {
+			"value": ""
+		},
 		"TripFaresSynapseAnalyticsLinkedService_connectionString": {
 			"value": ""
 		},
