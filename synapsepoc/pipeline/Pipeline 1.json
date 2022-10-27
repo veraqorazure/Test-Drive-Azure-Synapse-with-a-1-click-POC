@@ -1,0 +1,91 @@
+{
+	"name": "Pipeline 1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"sink": {
+						"type": "SqlPoolSink",
+						"allowCopyCommand": true
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "AzureBlobStorage1",
+							"type": "LinkedServiceReference"
+						},
+						"path": "dlsverpocfs1"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['donorid']"
+								},
+								"sink": {
+									"name": "Donorkey",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['donorfirst_name']"
+								},
+								"sink": {
+									"name": "FName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['donorlastname']"
+								},
+								"sink": {
+									"name": "LName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['donorprovinceid']"
+								},
+								"sink": {
+									"name": "ProvinceKey",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['donoraddress']"
+								},
+								"sink": {
+									"name": "Address",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"outputs": [
+					{
+						"referenceName": "SqlPoolTable1",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}

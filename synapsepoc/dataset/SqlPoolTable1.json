@@ -1,0 +1,59 @@
+{
+	"name": "SqlPoolTable1",
+	"properties": {
+		"annotations": [],
+		"type": "SqlPoolTable",
+		"schema": [
+			{
+				"name": "DonorId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Donorkey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "FName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Address",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProvinceKey",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ValidFrom",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ValidTo",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "IsActive",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Donor"
+		},
+		"sqlPool": {
+			"referenceName": "ver3c4sqe737khsepocws1p1",
+			"type": "SqlPoolReference"
+		}
+	}
+}
