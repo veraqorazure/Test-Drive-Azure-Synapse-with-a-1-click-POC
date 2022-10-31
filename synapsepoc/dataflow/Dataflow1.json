@@ -65,6 +65,7 @@
 				"     format: 'table',",
 				"     staged: true,",
 				"     allowCopyCommand: true,",
+				"     preSQLs:['Truncate table DBO.DonationMerge'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
