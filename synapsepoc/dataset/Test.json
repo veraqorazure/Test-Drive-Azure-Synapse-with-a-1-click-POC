@@ -7,10 +7,61 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlDWTable",
-		"schema": [],
+		"schema": [
+			{
+				"name": "donorid",
+				"type": "nvarchar"
+			},
+			{
+				"name": "donorfirst_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "donorlastname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "donorcountryid",
+				"type": "nvarchar"
+			},
+			{
+				"name": "donorprovinceid",
+				"type": "nvarchar"
+			},
+			{
+				"name": "donorcity",
+				"type": "nvarchar"
+			},
+			{
+				"name": "donoraddress",
+				"type": "nvarchar"
+			},
+			{
+				"name": "donationid",
+				"type": "nvarchar"
+			},
+			{
+				"name": "referencenumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "donationdate",
+				"type": "nvarchar"
+			},
+			{
+				"name": "eventId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "amount",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 15
+			}
+		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "Country_stg"
+			"table": "DonationMerge"
 		}
 	}
 }

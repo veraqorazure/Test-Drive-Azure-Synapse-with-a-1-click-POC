@@ -1,0 +1,75 @@
+{
+	"name": "Dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Json2",
+						"type": "DatasetReference"
+					},
+					"name": "json"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Test",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          donorid as string,",
+				"          donorfirst_name as string,",
+				"          donorlastname as string,",
+				"          donorcountryid as integer,",
+				"          donorprovinceid as integer,",
+				"          donorcity as string,",
+				"          donoraddress as string,",
+				"          donationid as string,",
+				"          referencenumber as string,",
+				"          donationdate as string,",
+				"          eventId as string,",
+				"          amount as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     moveFiles: ['','Archive'],",
+				"     documentForm: 'documentPerLine',",
+				"     wildcardPaths:['*Donation*.json']) ~> json",
+				"json sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          donorid as string,",
+				"          donorfirst_name as string,",
+				"          donorlastname as string,",
+				"          donorcountryid as string,",
+				"          donorprovinceid as string,",
+				"          donorcity as string,",
+				"          donoraddress as string,",
+				"          donationid as string,",
+				"          referencenumber as string,",
+				"          donationdate as string,",
+				"          eventId as string,",
+				"          amount as decimal(38,15)",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}
