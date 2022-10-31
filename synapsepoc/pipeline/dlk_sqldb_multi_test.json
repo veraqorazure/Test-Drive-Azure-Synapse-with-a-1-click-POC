@@ -127,9 +127,7 @@
 						"referenceName": "Json2",
 						"type": "DatasetReference"
 					},
-					"fieldList": [
-						"childItems"
-					],
+					"fieldList": [],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"enablePartitionDiscovery": false
@@ -175,18 +173,27 @@
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
 										"recursive": true,
-										"wildcardFileName": "*.json",
 										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
 										"type": "JsonReadSettings"
 									}
 								},
+								"sink": {
+									"type": "SqlPoolSink",
+									"allowCopyCommand": true
+								},
 								"enableStaging": false
 							},
 							"inputs": [
 								{
 									"referenceName": "Json2",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "multifile_test",
 									"type": "DatasetReference"
 								}
 							]
