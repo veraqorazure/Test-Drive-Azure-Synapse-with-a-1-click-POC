@@ -1,0 +1,17 @@
+{
+	"name": "multifile_test",
+	"properties": {
+		"parameters": {
+			"TableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlPoolTable",
+		"schema": [],
+		"sqlPool": {
+			"referenceName": "ver3c4sqe737khsepocws1p1",
+			"type": "SqlPoolReference"
+		}
+	}
+}
