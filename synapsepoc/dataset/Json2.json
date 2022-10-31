@@ -1,0 +1,59 @@
+{
+	"name": "Json2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dlsg_adf_multifiles_Test",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "@dataset().filename",
+				"fileSystem": "donations"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"donorid": {
+					"type": "string"
+				},
+				"donorfirst_name": {
+					"type": "string"
+				},
+				"donorlastname": {
+					"type": "string"
+				},
+				"donorcountryid": {
+					"type": "integer"
+				},
+				"donorprovinceid": {
+					"type": "integer"
+				},
+				"donorcity": {
+					"type": "string"
+				},
+				"donoraddress": {
+					"type": "string"
+				},
+				"donationid": {
+					"type": "string"
+				},
+				"referencenumber": {
+					"type": "string"
+				},
+				"donationdate": {
+					"type": "string"
+				},
+				"eventId": {
+					"type": "string"
+				},
+				"amount": {
+					"type": "number"
+				}
+			}
+		}
+	}
+}
