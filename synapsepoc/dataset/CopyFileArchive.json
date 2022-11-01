@@ -10,12 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "item().name",
-					"type": "Expression"
-				},
-				"folderPath": "Archive",
-				"fileSystem": "donations"
+				"fileName": "*.json",
+				"fileSystem": "archive"
 			}
 		},
 		"schema": {}
