@@ -18,7 +18,7 @@
 					"source": {
 						"type": "JsonSource",
 						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
+							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"enablePartitionDiscovery": false
 						},
@@ -27,7 +27,7 @@
 						}
 					},
 					"sink": {
-						"type": "SqlPoolSink",
+						"type": "SqlDWSink",
 						"allowCopyCommand": true
 					},
 					"enableStaging": true,
@@ -91,13 +91,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Json1",
+						"referenceName": "Json2",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "SqlPoolTable1",
+						"referenceName": "Test",
 						"type": "DatasetReference"
 					}
 				]
