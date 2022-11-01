@@ -1,0 +1,19 @@
+{
+	"name": "CopyFileArchive",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dlsg_adf_multifiles_Test",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Archive",
+				"fileSystem": "donations"
+			}
+		},
+		"schema": {}
+	}
+}

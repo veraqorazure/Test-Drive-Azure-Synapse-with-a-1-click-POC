@@ -20,11 +20,10 @@
 						"type": "DatasetReference"
 					},
 					"fieldList": [
-						"exists"
+						"childItems"
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
-						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -33,8 +32,8 @@
 				}
 			},
 			{
-				"name": "If Condition1",
-				"type": "IfCondition",
+				"name": "ForEach1",
+				"type": "ForEach",
 				"dependsOn": [
 					{
 						"activity": "Get Metadata1",
@@ -45,14 +44,14 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"expression": {
-						"value": "@activity('Get Metadata1').output.exists",
+					"items": {
+						"value": "@activity('Get Metadata1').output.childItems",
 						"type": "Expression"
 					},
-					"ifTrueActivities": [
+					"activities": [
 						{
-							"name": "Data flow1",
-							"type": "ExecuteDataFlow",
+							"name": "Copy data1",
+							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
@@ -63,26 +62,218 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"dataflow": {
-									"referenceName": "Dataflow1",
-									"type": "DataFlowReference"
+								"source": {
+									"type": "JsonSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"wildcardFileName": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "JsonReadSettings"
+									}
 								},
-								"staging": {
-									"linkedService": {
+								"sink": {
+									"type": "SqlDWSink",
+									"allowCopyCommand": true
+								},
+								"enableStaging": true,
+								"stagingSettings": {
+									"linkedServiceName": {
 										"referenceName": "dlsg_adf_multifiles_Test",
 										"type": "LinkedServiceReference"
-									},
-									"folderPath": "donations"
+									}
 								},
-								"compute": {
-									"coreCount": 8,
-									"computeType": "General"
-								},
-								"traceLevel": "Fine"
-							}
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"path": "$['donorid']"
+											},
+											"sink": {
+												"name": "donorid",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donorfirst_name']"
+											},
+											"sink": {
+												"name": "donorfirst_name",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donorlastname']"
+											},
+											"sink": {
+												"name": "donorlastname",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donorcountryid']"
+											},
+											"sink": {
+												"name": "donorcountryid",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donorprovinceid']"
+											},
+											"sink": {
+												"name": "donorprovinceid",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donorcity']"
+											},
+											"sink": {
+												"name": "donorcity",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donoraddress']"
+											},
+											"sink": {
+												"name": "donoraddress",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donationid']"
+											},
+											"sink": {
+												"name": "donationid",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['referencenumber']"
+											},
+											"sink": {
+												"name": "referencenumber",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donationdate']"
+											},
+											"sink": {
+												"name": "donationdate",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['eventId']"
+											},
+											"sink": {
+												"name": "eventId",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['amount']"
+											},
+											"sink": {
+												"name": "amount",
+												"type": "Decimal"
+											}
+										}
+									]
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "Json2",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Test",
+									"type": "DatasetReference"
+								}
+							]
 						}
 					]
 				}
+			},
+			{
+				"name": "Copy to Archive",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.json",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings",
+							"copyBehavior": "MergeFiles"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Json2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CopyFileArchive",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []
