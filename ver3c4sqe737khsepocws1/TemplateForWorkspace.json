@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"AzureSynapseAnalytics1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSynapseAnalytics1'"
+		},
 		"AzureSynapseAnalytics1_test_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSynapseAnalytics1_test'"
@@ -18,6 +22,10 @@
 		"TripFaresSynapseAnalyticsLinkedService_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'TripFaresSynapseAnalyticsLinkedService'"
+		},
+		"dlsg_adf_multifiles_Test_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'dlsg_adf_multifiles_Test'"
 		},
 		"HttpServerTripDataLinkedService_properties_typeProperties_url": {
 			"type": "string",
@@ -30,6 +38,10 @@
 		"TripFaresDataLakeStorageLinkedService_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "@{concat('https://',linkedService().datalakeAccountName,'.dfs.core.windows.net')}"
+		},
+		"dlsg_adf_multifiles_Test_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://test222211.dfs.core.windows.net/"
 		},
 		"keyVaultLinkedservice_properties_typeProperties_baseUrl": {
 			"type": "string",
@@ -62,8 +74,9 @@
 							"source": {
 								"type": "JsonSource",
 								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
+									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
+									"wildcardFileName": "*.json",
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -71,7 +84,7 @@
 								}
 							},
 							"sink": {
-								"type": "SqlPoolSink",
+								"type": "SqlDWSink",
 								"allowCopyCommand": true,
 								"copyCommandSettings": {}
 							},
@@ -91,7 +104,7 @@
 											"path": "$['donorid']"
 										},
 										"sink": {
-											"name": "Donorkey",
+											"name": "donorid",
 											"type": "String"
 										}
 									},
@@ -100,7 +113,7 @@
 											"path": "$['donorfirst_name']"
 										},
 										"sink": {
-											"name": "FName",
+											"name": "donorfirst_name",
 											"type": "String"
 										}
 									},
@@ -109,7 +122,16 @@
 											"path": "$['donorlastname']"
 										},
 										"sink": {
-											"name": "LName",
+											"name": "donorlastname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['donorcountryid']"
+										},
+										"sink": {
+											"name": "donorcountryid",
 											"type": "String"
 										}
 									},
@@ -118,7 +140,16 @@
 											"path": "$['donorprovinceid']"
 										},
 										"sink": {
-											"name": "ProvinceKey",
+											"name": "donorprovinceid",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['donorcity']"
+										},
+										"sink": {
+											"name": "donorcity",
 											"type": "String"
 										}
 									},
@@ -127,8 +158,53 @@
 											"path": "$['donoraddress']"
 										},
 										"sink": {
-											"name": "Address",
+											"name": "donoraddress",
 											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['donationid']"
+										},
+										"sink": {
+											"name": "donationid",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['referencenumber']"
+										},
+										"sink": {
+											"name": "referencenumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['donationdate']"
+										},
+										"sink": {
+											"name": "donationdate",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['eventId']"
+										},
+										"sink": {
+											"name": "eventId",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['amount']"
+										},
+										"sink": {
+											"name": "amount",
+											"type": "Decimal"
 										}
 									}
 								]
@@ -136,14 +212,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "Json1",
+								"referenceName": "Json2",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "SqlPoolTable1",
+								"referenceName": "Test",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -157,9 +233,564 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/SqlPoolTable1')]",
-				"[concat(variables('workspaceId'), '/datasets/Json1')]",
+				"[concat(variables('workspaceId'), '/datasets/Json2')]",
+				"[concat(variables('workspaceId'), '/datasets/Test')]",
 				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Pipeline 2')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "Json2",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "JsonReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Metadata1').output.childItems",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "JsonSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"wildcardFileName": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "JsonReadSettings"
+											}
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": "Truncate table dbo.donationmerge;",
+											"allowCopyCommand": true,
+											"copyCommandSettings": {},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": true,
+										"stagingSettings": {
+											"linkedServiceName": {
+												"referenceName": "dlsg_adf_multifiles_Test",
+												"type": "LinkedServiceReference"
+											}
+										},
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['donorid']"
+													},
+													"sink": {
+														"name": "donorid",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donorfirst_name']"
+													},
+													"sink": {
+														"name": "donorfirst_name",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donorlastname']"
+													},
+													"sink": {
+														"name": "donorlastname",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donorcountryid']"
+													},
+													"sink": {
+														"name": "donorcountryid",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donorprovinceid']"
+													},
+													"sink": {
+														"name": "donorprovinceid",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donorcity']"
+													},
+													"sink": {
+														"name": "donorcity",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donoraddress']"
+													},
+													"sink": {
+														"name": "donoraddress",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donationid']"
+													},
+													"sink": {
+														"name": "donationid",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['referencenumber']"
+													},
+													"sink": {
+														"name": "referencenumber",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donationdate']"
+													},
+													"sink": {
+														"name": "donationdate",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['eventId']"
+													},
+													"sink": {
+														"name": "eventId",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['amount']"
+													},
+													"sink": {
+														"name": "amount",
+														"type": "Decimal"
+													}
+												}
+											]
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "Json2",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "Test",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								},
+								{
+									"name": "Copy data2",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "Copy data1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "JsonSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"wildcardFileName": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "JsonReadSettings"
+											}
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['donorid']"
+													},
+													"sink": {
+														"path": "$['donorid']"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donorfirst_name']"
+													},
+													"sink": {
+														"path": "$['donorfirst_name']"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donorlastname']"
+													},
+													"sink": {
+														"path": "$['donorlastname']"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donorcountryid']"
+													},
+													"sink": {
+														"path": "$['donorcountryid']"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donorprovinceid']"
+													},
+													"sink": {
+														"path": "$['donorprovinceid']"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donorcity']"
+													},
+													"sink": {
+														"path": "$['donorcity']"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donoraddress']"
+													},
+													"sink": {
+														"path": "$['donoraddress']"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donationid']"
+													},
+													"sink": {
+														"path": "$['donationid']"
+													}
+												},
+												{
+													"source": {
+														"path": "$['referencenumber']"
+													},
+													"sink": {
+														"path": "$['referencenumber']"
+													}
+												},
+												{
+													"source": {
+														"path": "$['donationdate']"
+													},
+													"sink": {
+														"path": "$['donationdate']"
+													}
+												},
+												{
+													"source": {
+														"path": "$['eventId']"
+													},
+													"sink": {
+														"path": "$['eventId']"
+													}
+												},
+												{
+													"source": {
+														"path": "$['amount']"
+													},
+													"sink": {
+														"path": "$['amount']"
+													}
+												}
+											]
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "Json2",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "CopyFileArchive",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Delete1",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "ForEach1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "Json2",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "dlsg_adf_multifiles_Test",
+									"type": "LinkedServiceReference"
+								},
+								"path": "logs"
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"wildcardFileName": "*.json",
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "Copy data3",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ForEach1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": " select DISTINCT \n DM.DONORID,\n DONORFIRST_NAME,\n DONORLASTNAME,\n DONORADDRESS,\n DONORPROVINCEID\n\n from DBO.DonationMerge DM\n LEFT JOIN \n (\n SELECT DONORID,FNAME,LNAME,ADDRESS,PROVINCEKEY FROM DBO.DONOR\n )B\n ON DM.DONORID=B.DONORID\n",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"allowCopyCommand": true,
+								"copyCommandSettings": {}
+							},
+							"enableStaging": true,
+							"stagingSettings": {
+								"linkedServiceName": {
+									"referenceName": "dlsg_adf_multifiles_Test",
+									"type": "LinkedServiceReference"
+								}
+							},
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "DONORID",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Donorkey",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DONORFIRST_NAME",
+											"type": "String"
+										},
+										"sink": {
+											"name": "FName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DONORLASTNAME",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DONORADDRESS",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Address",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DONORPROVINCEID",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ProvinceKey",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Test",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Test",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/Json2')]",
+				"[concat(variables('workspaceId'), '/datasets/Test')]",
+				"[concat(variables('workspaceId'), '/linkedServices/dlsg_adf_multifiles_Test')]",
+				"[concat(variables('workspaceId'), '/datasets/CopyFileArchive')]"
 			]
 		},
 		{
@@ -800,6 +1431,29 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/CopyFileArchive')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "dlsg_adf_multifiles_Test",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "archive"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/dlsg_adf_multifiles_Test')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Json1')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -843,6 +1497,69 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Json2')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "dlsg_adf_multifiles_Test",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "donations"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"donorid": {
+							"type": "string"
+						},
+						"donorfirst_name": {
+							"type": "string"
+						},
+						"donorlastname": {
+							"type": "string"
+						},
+						"donorcountryid": {
+							"type": "integer"
+						},
+						"donorprovinceid": {
+							"type": "integer"
+						},
+						"donorcity": {
+							"type": "string"
+						},
+						"donoraddress": {
+							"type": "string"
+						},
+						"donationid": {
+							"type": "string"
+						},
+						"referencenumber": {
+							"type": "string"
+						},
+						"donationdate": {
+							"type": "string"
+						},
+						"eventId": {
+							"type": "string"
+						},
+						"amount": {
+							"type": "number"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/dlsg_adf_multifiles_Test')]"
 			]
 		},
 		{
@@ -920,10 +1637,52 @@
 				},
 				"annotations": [],
 				"type": "AzureSqlDWTable",
-				"schema": [],
+				"schema": [
+					{
+						"name": "DonorId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Donorkey",
+						"type": "nvarchar"
+					},
+					{
+						"name": "FName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ProvinceKey",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ValidFrom",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ValidTo",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "IsActive",
+						"type": "nvarchar"
+					}
+				],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "Country_stg"
+					"table": "Donor"
 				}
 			},
 			"dependsOn": [
@@ -1171,6 +1930,29 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/multifile_test')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"TableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlPoolTable",
+				"schema": [],
+				"typeProperties": {},
+				"sqlPool": {
+					"referenceName": "ver3c4sqe737khsepocws1p1",
+					"type": "SqlPoolReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/sqlPools/ver3c4sqe737khsepocws1p1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/tripDataSink')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -1314,6 +2096,25 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureSynapseAnalytics1')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSynapseAnalytics1_connectionString')]"
 				},
 				"connectVia": {
 					"referenceName": "AutoResolveIntegrationRuntime",
@@ -1494,6 +2295,29 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/dlsg_adf_multifiles_Test')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('dlsg_adf_multifiles_Test_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('dlsg_adf_multifiles_Test_accountKey')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/keyVaultLinkedservice')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -1538,6 +2362,84 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Dataflow1')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Json2",
+								"type": "DatasetReference"
+							},
+							"name": "json"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Test",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          donorid as string,",
+						"          donorfirst_name as string,",
+						"          donorlastname as string,",
+						"          donorcountryid as integer,",
+						"          donorprovinceid as integer,",
+						"          donorcity as string,",
+						"          donoraddress as string,",
+						"          donationid as string,",
+						"          referencenumber as string,",
+						"          donationdate as string,",
+						"          eventId as string,",
+						"          amount as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'arrayOfDocuments',",
+						"     wildcardPaths:['*Donation*.json']) ~> json",
+						"json sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          DonorId as integer,",
+						"          Donorkey as string,",
+						"          FName as string,",
+						"          LName as string,",
+						"          Address as string,",
+						"          ProvinceKey as string,",
+						"          ValidFrom as timestamp,",
+						"          ValidTo as timestamp,",
+						"          IsActive as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     staged: true,",
+						"     allowCopyCommand: true,",
+						"     preSQLs:['Truncate table DBO.DonationMerge'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/Json2')]",
+				"[concat(variables('workspaceId'), '/datasets/Test')]"
 			]
 		},
 		{
