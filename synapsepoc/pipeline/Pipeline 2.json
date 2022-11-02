@@ -240,12 +240,6 @@
 							"typeProperties": {
 								"source": {
 									"type": "JsonSource",
-									"additionalColumns": [
-										{
-											"name": "test",
-											"value": "$$COLUMN:"
-										}
-									],
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
 										"recursive": true,
@@ -275,60 +269,96 @@
 										{
 											"source": {
 												"path": "$['donorid']"
+											},
+											"sink": {
+												"path": "$['donorid']"
 											}
 										},
 										{
 											"source": {
+												"path": "$['donorfirst_name']"
+											},
+											"sink": {
 												"path": "$['donorfirst_name']"
 											}
 										},
 										{
 											"source": {
 												"path": "$['donorlastname']"
+											},
+											"sink": {
+												"path": "$['donorlastname']"
 											}
 										},
 										{
 											"source": {
+												"path": "$['donorcountryid']"
+											},
+											"sink": {
 												"path": "$['donorcountryid']"
 											}
 										},
 										{
 											"source": {
 												"path": "$['donorprovinceid']"
+											},
+											"sink": {
+												"path": "$['donorprovinceid']"
 											}
 										},
 										{
 											"source": {
+												"path": "$['donorcity']"
+											},
+											"sink": {
 												"path": "$['donorcity']"
 											}
 										},
 										{
 											"source": {
 												"path": "$['donoraddress']"
+											},
+											"sink": {
+												"path": "$['donoraddress']"
 											}
 										},
 										{
 											"source": {
+												"path": "$['donationid']"
+											},
+											"sink": {
 												"path": "$['donationid']"
 											}
 										},
 										{
 											"source": {
 												"path": "$['referencenumber']"
+											},
+											"sink": {
+												"path": "$['referencenumber']"
 											}
 										},
 										{
 											"source": {
+												"path": "$['donationdate']"
+											},
+											"sink": {
 												"path": "$['donationdate']"
 											}
 										},
 										{
 											"source": {
 												"path": "$['eventId']"
+											},
+											"sink": {
+												"path": "$['eventId']"
 											}
 										},
 										{
 											"source": {
+												"path": "$['amount']"
+											},
+											"sink": {
 												"path": "$['amount']"
 											}
 										}
