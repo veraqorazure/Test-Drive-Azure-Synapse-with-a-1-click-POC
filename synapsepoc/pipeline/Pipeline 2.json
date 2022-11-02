@@ -80,7 +80,9 @@
 								},
 								"sink": {
 									"type": "SqlDWSink",
-									"allowCopyCommand": true
+									"preCopyScript": "Truncate table dbo.donationmerge;",
+									"allowCopyCommand": true,
+									"disableMetricsCollection": false
 								},
 								"enableStaging": true,
 								"stagingSettings": {
@@ -238,6 +240,12 @@
 							"typeProperties": {
 								"source": {
 									"type": "JsonSource",
+									"additionalColumns": [
+										{
+											"name": "test",
+											"value": "$$COLUMN:"
+										}
+									],
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
 										"recursive": true,
@@ -260,7 +268,72 @@
 										"type": "JsonWriteSettings"
 									}
 								},
-								"enableStaging": false
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"path": "$['donorid']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donorfirst_name']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donorlastname']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donorcountryid']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donorprovinceid']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donorcity']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donoraddress']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donationid']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['referencenumber']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['donationdate']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['eventId']"
+											}
+										},
+										{
+											"source": {
+												"path": "$['amount']"
+											}
+										}
+									]
+								}
 							},
 							"inputs": [
 								{
@@ -317,6 +390,112 @@
 						"enablePartitionDiscovery": false
 					}
 				}
+			},
+			{
+				"name": "Copy data3",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": " select DISTINCT \n DM.DONORID,\n DONORFIRST_NAME,\n DONORLASTNAME,\n DONORADDRESS,\n DONORPROVINCEID\n\n from DBO.DonationMerge DM\n LEFT JOIN \n (\n SELECT DONORID,FNAME,LNAME,ADDRESS,PROVINCEKEY FROM DBO.DONOR\n )B\n ON DM.DONORID=B.DONORID\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlDWSink",
+						"allowCopyCommand": true
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "dlsg_adf_multifiles_Test",
+							"type": "LinkedServiceReference"
+						}
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "DONORID",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Donorkey",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DONORFIRST_NAME",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DONORLASTNAME",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DONORADDRESS",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Address",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DONORPROVINCEID",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ProvinceKey",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Test",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Test",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []
