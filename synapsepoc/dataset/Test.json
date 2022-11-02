@@ -9,59 +9,50 @@
 		"type": "AzureSqlDWTable",
 		"schema": [
 			{
-				"name": "donorid",
+				"name": "DonorId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Donorkey",
 				"type": "nvarchar"
 			},
 			{
-				"name": "donorfirst_name",
+				"name": "FName",
 				"type": "nvarchar"
 			},
 			{
-				"name": "donorlastname",
+				"name": "LName",
 				"type": "nvarchar"
 			},
 			{
-				"name": "donorcountryid",
+				"name": "Address",
 				"type": "nvarchar"
 			},
 			{
-				"name": "donorprovinceid",
+				"name": "ProvinceKey",
 				"type": "nvarchar"
 			},
 			{
-				"name": "donorcity",
-				"type": "nvarchar"
+				"name": "ValidFrom",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
 			},
 			{
-				"name": "donoraddress",
-				"type": "nvarchar"
+				"name": "ValidTo",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
 			},
 			{
-				"name": "donationid",
+				"name": "IsActive",
 				"type": "nvarchar"
-			},
-			{
-				"name": "referencenumber",
-				"type": "nvarchar"
-			},
-			{
-				"name": "donationdate",
-				"type": "nvarchar"
-			},
-			{
-				"name": "eventId",
-				"type": "nvarchar"
-			},
-			{
-				"name": "amount",
-				"type": "decimal",
-				"precision": 38,
-				"scale": 15
 			}
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "DonationMerge"
+			"table": "Donor"
 		}
 	}
 }
