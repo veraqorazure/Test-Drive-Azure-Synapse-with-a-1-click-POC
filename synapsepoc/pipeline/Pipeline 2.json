@@ -19,11 +19,10 @@
 						"referenceName": "Json2",
 						"type": "DatasetReference"
 					},
-					"fieldList": [
-						"childItems"
-					],
+					"fieldList": [],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -306,12 +305,13 @@
 							"referenceName": "dlsg_adf_multifiles_Test",
 							"type": "LinkedServiceReference"
 						},
-						"path": ""
+						"path": "donations"
 					},
 					"enableLogging": true,
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"recursive": true,
+						"wildcardFileName": "*.json",
 						"enablePartitionDiscovery": false
 					}
 				}
