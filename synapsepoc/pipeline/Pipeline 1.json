@@ -169,7 +169,13 @@
 				"outputs": [
 					{
 						"referenceName": "CopyFileArchive",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"filenamearchive": {
+								"value": "@pipeline().parameters.fname",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
