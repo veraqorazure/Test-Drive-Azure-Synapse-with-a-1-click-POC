@@ -175,18 +175,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Json2",
-						"type": "DatasetReference",
-						"parameters": {
-							"filename": {
-								"value": "@pipeline().parameters.fname",
-								"type": "Expression"
-							},
-							"containername": {
-								"value": "@pipeline().parameters.cname",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "CopyFileArchive",
+						"type": "DatasetReference"
 					}
 				]
 			}
