@@ -160,7 +160,13 @@
 				"inputs": [
 					{
 						"referenceName": "Json2",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": {
+								"value": "@pipeline().parameters.fname",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
