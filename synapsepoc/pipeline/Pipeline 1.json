@@ -165,6 +165,10 @@
 							"filename": {
 								"value": "@pipeline().parameters.fname",
 								"type": "Expression"
+							},
+							"containername": {
+								"value": "@pipeline().parameters.cname",
+								"type": "Expression"
 							}
 						}
 					}
