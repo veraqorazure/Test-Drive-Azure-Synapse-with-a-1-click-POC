@@ -1,0 +1,29 @@
+{
+	"name": "Trigger 1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Pipeline 1",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"fname": "@triggerBody().filename",
+					"cname": "@triggerBody().filepath"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/donations/blobs/EventDonation",
+			"blobPathEndsWith": ".json",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/3cf132bf-b47c-42db-aa48-0803c5db1593/resourceGroups/dlz001-dev-dp001/providers/Microsoft.Storage/storageAccounts/test222211",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
