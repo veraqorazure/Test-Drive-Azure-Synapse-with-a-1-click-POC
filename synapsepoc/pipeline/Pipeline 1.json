@@ -44,8 +44,7 @@
 									"path": "$['donorid']"
 								},
 								"sink": {
-									"name": "donorid",
-									"type": "String"
+									"path": "$['donorid']"
 								}
 							},
 							{
@@ -53,8 +52,7 @@
 									"path": "$['donorfirst_name']"
 								},
 								"sink": {
-									"name": "donorfirst_name",
-									"type": "String"
+									"path": "$['donorfirst_name']"
 								}
 							},
 							{
@@ -62,8 +60,7 @@
 									"path": "$['donorlastname']"
 								},
 								"sink": {
-									"name": "donorlastname",
-									"type": "String"
+									"path": "$['donorlastname']"
 								}
 							},
 							{
@@ -71,8 +68,7 @@
 									"path": "$['donorcountryid']"
 								},
 								"sink": {
-									"name": "donorcountryid",
-									"type": "String"
+									"path": "$['donorcountryid']"
 								}
 							},
 							{
@@ -80,8 +76,7 @@
 									"path": "$['donorprovinceid']"
 								},
 								"sink": {
-									"name": "donorprovinceid",
-									"type": "String"
+									"path": "$['donorprovinceid']"
 								}
 							},
 							{
@@ -89,8 +84,7 @@
 									"path": "$['donorcity']"
 								},
 								"sink": {
-									"name": "donorcity",
-									"type": "String"
+									"path": "$['donorcity']"
 								}
 							},
 							{
@@ -98,8 +92,7 @@
 									"path": "$['donoraddress']"
 								},
 								"sink": {
-									"name": "donoraddress",
-									"type": "String"
+									"path": "$['donoraddress']"
 								}
 							},
 							{
@@ -107,8 +100,7 @@
 									"path": "$['donationid']"
 								},
 								"sink": {
-									"name": "donationid",
-									"type": "String"
+									"path": "$['donationid']"
 								}
 							},
 							{
@@ -116,8 +108,7 @@
 									"path": "$['referencenumber']"
 								},
 								"sink": {
-									"name": "referencenumber",
-									"type": "String"
+									"path": "$['referencenumber']"
 								}
 							},
 							{
@@ -125,8 +116,7 @@
 									"path": "$['donationdate']"
 								},
 								"sink": {
-									"name": "donationdate",
-									"type": "String"
+									"path": "$['donationdate']"
 								}
 							},
 							{
@@ -134,8 +124,7 @@
 									"path": "$['eventId']"
 								},
 								"sink": {
-									"name": "eventId",
-									"type": "String"
+									"path": "$['eventId']"
 								}
 							},
 							{
@@ -143,8 +132,7 @@
 									"path": "$['amount']"
 								},
 								"sink": {
-									"name": "amount",
-									"type": "Decimal"
+									"path": "$['amount']"
 								}
 							}
 						]
