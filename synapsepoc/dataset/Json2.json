@@ -22,7 +22,7 @@
 					"value": "@dataset().filename",
 					"type": "Expression"
 				},
-				"folderPath": {
+				"fileSystem": {
 					"value": "@dataset().containername",
 					"type": "Expression"
 				}
