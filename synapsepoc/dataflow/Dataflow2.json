@@ -3,41 +3,11 @@
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [
-				{
-					"dataset": {
-						"referenceName": "Json2",
-						"type": "DatasetReference"
-					},
-					"name": "source1"
-				}
-			],
+			"sources": [],
 			"sinks": [],
-			"transformations": [
-				{
-					"name": "derivedColumn1"
-				}
-			],
+			"transformations": [],
 			"scriptLines": [
-				"source(output(",
-				"          donorid as string,",
-				"          donorfirst_name as string,",
-				"          donorlastname as string,",
-				"          donorcountryid as integer,",
-				"          donorprovinceid as integer,",
-				"          donorcity as string,",
-				"          donoraddress as string,",
-				"          donationid as string,",
-				"          referencenumber as string,",
-				"          donationdate as string,",
-				"          eventId as string,",
-				"          amount as double",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'arrayOfDocuments') ~> source1",
-				"source1 derive(column1 = concat(donorid,'_' ,eventId)) ~> derivedColumn1"
+				""
 			]
 		}
 	}
