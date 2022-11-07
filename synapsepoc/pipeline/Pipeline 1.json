@@ -28,8 +28,13 @@
 						}
 					},
 					"sink": {
-						"type": "SqlDWSink",
-						"allowCopyCommand": true
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
 					},
 					"enableStaging": true,
 					"stagingSettings": {
@@ -161,7 +166,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Test",
+						"referenceName": "Json2",
 						"type": "DatasetReference"
 					}
 				]
