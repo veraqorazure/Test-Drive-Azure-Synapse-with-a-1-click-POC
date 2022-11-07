@@ -20,7 +20,6 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFileName": "*.json",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -172,6 +171,14 @@
 				]
 			}
 		],
+		"parameters": {
+			"fname": {
+				"type": "string"
+			},
+			"cname": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
