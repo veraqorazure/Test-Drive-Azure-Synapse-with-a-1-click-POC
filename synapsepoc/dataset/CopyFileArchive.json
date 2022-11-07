@@ -5,11 +5,20 @@
 			"referenceName": "dlsg_adf_multifiles_Test",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"filenamearchive": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().filenamearchive",
+					"type": "Expression"
+				},
 				"fileSystem": "archive"
 			}
 		},
