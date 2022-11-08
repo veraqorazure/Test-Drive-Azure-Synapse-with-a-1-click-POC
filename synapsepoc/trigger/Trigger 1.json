@@ -3,18 +3,7 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "Pipeline_csv",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"fname": "@trigger().outputs.body.fileName",
-					"cname": "@trigger().outputs.body.folderPath"
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "BlobEventsTrigger",
 		"typeProperties": {
 			"blobPathBeginsWith": "/csvinput/blobs/country",
