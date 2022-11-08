@@ -1,0 +1,29 @@
+{
+	"name": "csvtrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Pipeline_csv",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"fname": "@trigger().outputs.body.fileName",
+					"cname": "@trigger().outputs.body.folderPath"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/csvinput/blobs/country",
+			"blobPathEndsWith": "csv",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/3cf132bf-b47c-42db-aa48-0803c5db1593/resourceGroups/dlz001-dev-dp001/providers/Microsoft.Storage/storageAccounts/test222211",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
