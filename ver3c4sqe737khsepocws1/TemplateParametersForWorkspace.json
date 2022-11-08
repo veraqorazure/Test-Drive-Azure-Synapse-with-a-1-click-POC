@@ -37,6 +37,15 @@
 		},
 		"keyVaultLinkedservice_properties_typeProperties_baseUrl": {
 			"value": "@{concat('https://',linkedService().keyVaultName,'.vault.azure.net/')}"
+		},
+		"csvtrigger_properties_Pipeline_csv_parameters_fname": {
+			"value": "@trigger().outputs.body.fileName"
+		},
+		"csvtrigger_properties_Pipeline_csv_parameters_cname": {
+			"value": "@trigger().outputs.body.folderPath"
+		},
+		"csvtrigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/3cf132bf-b47c-42db-aa48-0803c5db1593/resourceGroups/dlz001-dev-dp001/providers/Microsoft.Storage/storageAccounts/test222211"
 		}
 	}
 }

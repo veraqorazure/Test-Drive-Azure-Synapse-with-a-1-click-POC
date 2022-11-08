@@ -50,6 +50,18 @@
 		"keyVaultLinkedservice_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "@{concat('https://',linkedService().keyVaultName,'.vault.azure.net/')}"
+		},
+		"csvtrigger_properties_Pipeline_csv_parameters_fname": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.body.fileName"
+		},
+		"csvtrigger_properties_Pipeline_csv_parameters_cname": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.body.folderPath"
+		},
+		"csvtrigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/3cf132bf-b47c-42db-aa48-0803c5db1593/resourceGroups/dlz001-dev-dp001/providers/Microsoft.Storage/storageAccounts/test222211"
 		}
 	},
 	"variables": {
@@ -3089,6 +3101,40 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvtrigger')]",
+			"type": "Microsoft.Synapse/workspaces/triggers",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Pipeline_csv",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"fname": "[parameters('csvtrigger_properties_Pipeline_csv_parameters_fname')]",
+							"cname": "[parameters('csvtrigger_properties_Pipeline_csv_parameters_cname')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/csvinput/blobs/country",
+					"blobPathEndsWith": "csv",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('csvtrigger_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/Pipeline_csv')]"
+			]
 		}
 	]
 }
