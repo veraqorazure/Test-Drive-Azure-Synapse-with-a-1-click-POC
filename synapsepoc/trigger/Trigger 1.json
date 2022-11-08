@@ -20,8 +20,8 @@
 					"type": "PipelineReference"
 				},
 				"parameters": {
-					"fname": "@triggerBody().fileName",
-					"cname": "@triggerBody().folderPath"
+					"fname": "@trigger().outputs.body.fileName",
+					"cname": "@trigger().outputs.body.folderPath"
 				}
 			}
 		],
