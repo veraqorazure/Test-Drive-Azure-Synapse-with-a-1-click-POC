@@ -53,11 +53,11 @@
 		},
 		"csvtrigger_properties_Pipeline_csv_parameters_fname": {
 			"type": "string",
-			"defaultValue": "@trigger().outputs.body.fileName"
+			"defaultValue": "@triggerBody().fileName"
 		},
 		"csvtrigger_properties_Pipeline_csv_parameters_cname": {
 			"type": "string",
-			"defaultValue": "@trigger().outputs.body.folderPath"
+			"defaultValue": "@triggerBody().folderPath"
 		},
 		"csvtrigger_properties_typeProperties_scope": {
 			"type": "string",
