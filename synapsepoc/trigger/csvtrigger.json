@@ -2,7 +2,7 @@
 	"name": "csvtrigger",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
@@ -10,8 +10,8 @@
 					"type": "PipelineReference"
 				},
 				"parameters": {
-					"fname": "@trigger().outputs.body.fileName",
-					"cname": "@trigger().outputs.body.folderPath"
+					"fname": "@triggerBody().fileName",
+					"cname": "@triggerBody().folderPath"
 				}
 			}
 		],
