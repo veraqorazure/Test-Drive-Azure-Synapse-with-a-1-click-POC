@@ -17,7 +17,11 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "Json2",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "test",
+							"containername": "test"
+						}
 					},
 					"fieldList": [
 						"childItems"
