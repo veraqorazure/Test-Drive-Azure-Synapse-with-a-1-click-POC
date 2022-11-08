@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"AzureBlobStorage2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage2'"
+		},
 		"AzureSynapseAnalytics1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSynapseAnalytics1'"
@@ -76,7 +80,6 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"wildcardFileName": "*.json",
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -84,18 +87,15 @@
 								}
 							},
 							"sink": {
-								"type": "SqlDWSink",
-								"allowCopyCommand": true,
-								"copyCommandSettings": {}
-							},
-							"enableStaging": true,
-							"stagingSettings": {
-								"linkedServiceName": {
-									"referenceName": "AzureBlobStorage1",
-									"type": "LinkedServiceReference"
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
 								},
-								"path": "dlsverpocfs1"
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
 							},
+							"enableStaging": false,
 							"translator": {
 								"type": "TabularTranslator",
 								"mappings": [
@@ -104,8 +104,7 @@
 											"path": "$['donorid']"
 										},
 										"sink": {
-											"name": "donorid",
-											"type": "String"
+											"path": "$['donorid']"
 										}
 									},
 									{
@@ -113,8 +112,7 @@
 											"path": "$['donorfirst_name']"
 										},
 										"sink": {
-											"name": "donorfirst_name",
-											"type": "String"
+											"path": "$['donorfirst_name']"
 										}
 									},
 									{
@@ -122,8 +120,7 @@
 											"path": "$['donorlastname']"
 										},
 										"sink": {
-											"name": "donorlastname",
-											"type": "String"
+											"path": "$['donorlastname']"
 										}
 									},
 									{
@@ -131,8 +128,7 @@
 											"path": "$['donorcountryid']"
 										},
 										"sink": {
-											"name": "donorcountryid",
-											"type": "String"
+											"path": "$['donorcountryid']"
 										}
 									},
 									{
@@ -140,8 +136,7 @@
 											"path": "$['donorprovinceid']"
 										},
 										"sink": {
-											"name": "donorprovinceid",
-											"type": "String"
+											"path": "$['donorprovinceid']"
 										}
 									},
 									{
@@ -149,8 +144,7 @@
 											"path": "$['donorcity']"
 										},
 										"sink": {
-											"name": "donorcity",
-											"type": "String"
+											"path": "$['donorcity']"
 										}
 									},
 									{
@@ -158,8 +152,7 @@
 											"path": "$['donoraddress']"
 										},
 										"sink": {
-											"name": "donoraddress",
-											"type": "String"
+											"path": "$['donoraddress']"
 										}
 									},
 									{
@@ -167,8 +160,7 @@
 											"path": "$['donationid']"
 										},
 										"sink": {
-											"name": "donationid",
-											"type": "String"
+											"path": "$['donationid']"
 										}
 									},
 									{
@@ -176,8 +168,7 @@
 											"path": "$['referencenumber']"
 										},
 										"sink": {
-											"name": "referencenumber",
-											"type": "String"
+											"path": "$['referencenumber']"
 										}
 									},
 									{
@@ -185,8 +176,7 @@
 											"path": "$['donationdate']"
 										},
 										"sink": {
-											"name": "donationdate",
-											"type": "String"
+											"path": "$['donationdate']"
 										}
 									},
 									{
@@ -194,8 +184,7 @@
 											"path": "$['eventId']"
 										},
 										"sink": {
-											"name": "eventId",
-											"type": "String"
+											"path": "$['eventId']"
 										}
 									},
 									{
@@ -203,8 +192,7 @@
 											"path": "$['amount']"
 										},
 										"sink": {
-											"name": "amount",
-											"type": "Decimal"
+											"path": "$['amount']"
 										}
 									}
 								]
@@ -214,14 +202,28 @@
 							{
 								"referenceName": "Json2",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"filename": {
+										"value": "@pipeline().parameters.fname",
+										"type": "Expression"
+									},
+									"containername": {
+										"value": "@pipeline().parameters.cname",
+										"type": "Expression"
+									}
+								}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "Test",
+								"referenceName": "CopyFileArchive",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"filenamearchive": {
+										"value": "@pipeline().parameters.fname",
+										"type": "Expression"
+									}
+								}
 							}
 						]
 					}
@@ -230,12 +232,19 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"parameters": {
+					"fname": {
+						"type": "string"
+					},
+					"cname": {
+						"type": "string"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/Json2')]",
-				"[concat(variables('workspaceId'), '/datasets/Test')]",
-				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorage1')]"
+				"[concat(variables('workspaceId'), '/datasets/CopyFileArchive')]"
 			]
 		},
 		{
@@ -260,7 +269,10 @@
 							"dataset": {
 								"referenceName": "Json2",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"filename": "test",
+									"containername": "test"
+								}
 							},
 							"fieldList": [
 								"childItems"
@@ -453,7 +465,10 @@
 										{
 											"referenceName": "Json2",
 											"type": "DatasetReference",
-											"parameters": {}
+											"parameters": {
+												"filename": "test",
+												"containername": "test"
+											}
 										}
 									],
 									"outputs": [
@@ -615,14 +630,19 @@
 										{
 											"referenceName": "Json2",
 											"type": "DatasetReference",
-											"parameters": {}
+											"parameters": {
+												"filename": "test",
+												"containername": "test"
+											}
 										}
 									],
 									"outputs": [
 										{
 											"referenceName": "CopyFileArchive",
 											"type": "DatasetReference",
-											"parameters": {}
+											"parameters": {
+												"filenamearchive": "test"
+											}
 										}
 									]
 								}
@@ -652,7 +672,10 @@
 							"dataset": {
 								"referenceName": "Json2",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"filename": "test",
+									"containername": "test"
+								}
 							},
 							"logStorageSettings": {
 								"linkedServiceName": {
@@ -791,6 +814,87 @@
 				"[concat(variables('workspaceId'), '/datasets/Test')]",
 				"[concat(variables('workspaceId'), '/linkedServices/dlsg_adf_multifiles_Test')]",
 				"[concat(variables('workspaceId'), '/datasets/CopyFileArchive')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Pipeline_csv')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "csv",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": {
+										"value": "@pipeline().parameters.fname",
+										"type": "Expression"
+									},
+									"containername": {
+										"value": "@pipeline().parameters.cname",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvarchive",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"fname": {
+						"type": "string"
+					},
+					"cname": {
+						"type": "string"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/csv')]",
+				"[concat(variables('workspaceId'), '/datasets/csvarchive')]"
 			]
 		},
 		{
@@ -1439,11 +1543,20 @@
 					"referenceName": "dlsg_adf_multifiles_Test",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"filenamearchive": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "Json",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().filenamearchive",
+							"type": "Expression"
+						},
 						"fileSystem": "archive"
 					}
 				},
@@ -1508,12 +1621,27 @@
 					"referenceName": "dlsg_adf_multifiles_Test",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					},
+					"containername": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "Json",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileSystem": "donations"
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().containername",
+							"type": "Expression"
+						}
 					}
 				},
 				"schema": {
@@ -1802,6 +1930,65 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/TripFaresSynapseAnalyticsLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csv')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					},
+					"containername": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().containername",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorage2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvarchive')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "csvarchive"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorage2')]"
 			]
 		},
 		{
@@ -2107,6 +2294,25 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/AzureBlobStorage2')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage2_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/AzureSynapseAnalytics1')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -2331,27 +2537,6 @@
 				"type": "AzureKeyVault",
 				"typeProperties": {
 					"baseUrl": "[parameters('keyVaultLinkedservice_properties_typeProperties_baseUrl')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Trigger 1')]",
-			"type": "Microsoft.Synapse/workspaces/triggers",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Month",
-						"interval": 3,
-						"startTime": "2022-11-02T09:00:00Z",
-						"timeZone": "UTC",
-						"schedule": {}
-					}
 				}
 			},
 			"dependsOn": []
