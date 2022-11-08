@@ -212,7 +212,11 @@
 							"inputs": [
 								{
 									"referenceName": "Json2",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"filename": "test",
+										"containername": "test"
+									}
 								}
 							],
 							"outputs": [
@@ -372,13 +376,20 @@
 							"inputs": [
 								{
 									"referenceName": "Json2",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"filename": "test",
+										"containername": "test"
+									}
 								}
 							],
 							"outputs": [
 								{
 									"referenceName": "CopyFileArchive",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"filenamearchive": "test"
+									}
 								}
 							]
 						}
@@ -407,7 +418,11 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "Json2",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "test",
+							"containername": "test"
+						}
 					},
 					"logStorageSettings": {
 						"linkedServiceName": {
